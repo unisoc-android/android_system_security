@@ -638,10 +638,11 @@ Status KeyStoreService::addRngEntropy(
         return AIDL_RETURN(ErrorCode::HARDWARE_TYPE_UNAVAILABLE);
     }
 
+    ALOGD("start addRngEntropy");
     device->addRngEntropy(entropy, [device, cb](Return<ErrorCode> rc) {
         cb->onFinished(KeyStoreServiceReturnCode(KS_HANDLE_HIDL_ERROR(device, rc)));
     });
-
+    ALOGD("finish addRngEntropy");
     return AIDL_RETURN(ResponseCode::NO_ERROR);
 }
 
@@ -1041,6 +1042,7 @@ Status KeyStoreService::attestKey(
 
     auto dev = mKeyStore->getDevice(keyBlob);
     auto hidlKey = blob2hidlVec(keyBlob);
+    ALOGD("start attestKey");
     dev->attestKey(
         std::move(hidlKey), mutableParams.hidl_data(),
         [dev, cb](Return<void> rc,
@@ -1056,6 +1058,7 @@ Status KeyStoreService::attestKey(
                                KeymasterCertificateChain(std::move(certChain)));
             }
         });
+    ALOGD("finish attestKey");
 
     return AIDL_RETURN(ResponseCode::NO_ERROR);
 }
